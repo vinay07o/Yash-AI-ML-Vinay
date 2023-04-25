@@ -1,15 +1,6 @@
 # Pipeline template to run linting, unit tests with code coverage, and publish the results.
 steps:
 - script: |
-    conda install anaconda-client -n base
-  displayName: 'Connecting client'
-
-- script: |
-    pwd
-    sh environment_setup/install_requirements.sh 
-  displayName: 'Environment'
-
-- script: |
    black insurance_classification/
   displayName: 'Auto Formatting Codes'
 
