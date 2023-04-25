@@ -35,14 +35,6 @@ stages:
       inputs:
         versionSpec: 3.8
 
-    - task: Bash@3
-      displayName: 'Install Dependencies'
-      inputs:
-        targetType: filePath
-        filePath: 'package_requirement.install_requirements.sh'
-        workingDirectory: $(Build.SourcesDirectory)
-
-
     - template: code-quality-template.yml
     - task: AzureCLI@1
       inputs:
