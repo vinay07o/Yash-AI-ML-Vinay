@@ -1,7 +1,7 @@
 # Pipeline template to run linting, unit tests with code coverage, and publish the results.
 steps:
 - script: |
-   sh install_requirements.sh
+   bash install_requirements.sh
   displayName: 'Dependencies Installing'
 
 - script: |
