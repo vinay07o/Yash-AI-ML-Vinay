@@ -21,9 +21,6 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-
-
 stages:
 - stage: 'Model_CI'
   displayName: 'Model CI'
@@ -42,7 +39,7 @@ stages:
       displayName: 'Install Dependencies'
       inputs:
         targetType: filePath
-        filePath: '../package_requirement\install_requirements.sh'
+        filePath: '../package_requirement/install_requirements.sh'
         workingDirectory: 'package_requirement'
 
     - template: code-quality-template.yml
