@@ -1,9 +1,9 @@
 # Pipeline template to run linting, unit tests with code coverage, and publish the results.
 steps:
 - script: |
-   sh package_requirement\install_requirements.sh
+   sh install_requirements.sh
   displayName: 'Dependencies Installing'
-  
+
 - script: |
    black insurance_classification/
   displayName: 'Auto Formatting Codes'
