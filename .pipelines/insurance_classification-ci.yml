@@ -21,17 +21,23 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: UsePythonVersion@0
-  displayName: 'Use Python 3.8'
-  inputs:
-    versionSpec: 3.8
+stages:
+- stage: 'Model_CI_dependecy'
+  displayName: 'Model CI Dependentcs'
+  jobs:
+  - job: "Model_CI_Pipeline_dependence"
+    displayName: "Model CI Pipeline dependence"
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python 3.8'
+      inputs:
+        versionSpec: 3.8
 
-- task: Bash@3
-  displayName: 'Install Dependencies'
-  inputs:
-    targetType: filePath
-    filePath: '../package_requirement/install_requirements.sh'
+    - task: Bash@3
+      displayName: 'Install Dependencies'
+      inputs:
+        targetType: filePath
+        filePath: '../package_requirement/install_requirements.sh'
 
 stages:
 - stage: 'Model_CI'
