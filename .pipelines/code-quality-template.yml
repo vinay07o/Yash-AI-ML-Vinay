@@ -1,0 +1,33 @@
+# Pipeline template to run linting, unit tests with code coverage, and publish the results.
+steps:
+- script: |
+    conda install anaconda-client -n base
+  displayName: 'Connecting client'
+
+- script: |
+    pwd
+    sh environment_setup/install_requirements.sh 
+  displayName: 'Environment'
+
+- script: |
+   black insurance_classification/
+  displayName: 'Auto Formatting Codes'
+
+- script: |   
+   flake8 --output-file=lint-testresults.xml --format junit-xml
+  displayName: 'Run lint tests'
+
+- script: |   
+   python -m pytest . --cov=insurence_classification --cov-report=html --cov-report=xml --junitxml=unit-testresults.xml
+  condition: succeededOrFailed()
+  displayName: 'Run unit tests'
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFiles: '*-testresults.xml'
+    testRunTitle: 'Linting & Unit tests'
+    failTaskOnFailedTests: true
+  displayName: 'Publish test results'
+
+
