@@ -39,7 +39,7 @@ stages:
       displayName: 'Install Dependencies'
       inputs:
         targetType: filePath
-        filePath: '../package_requirement/install_requirements.sh'
+        filePath: 'install_requirements.sh'
         workingDirectory: 'package_requirement'
 
     - template: code-quality-template.yml
