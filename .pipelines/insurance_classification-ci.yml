@@ -35,7 +35,6 @@ stages:
       inputs:
         versionSpec: 3.8
 
-    - template: ../package_requirement/install_requirements.sh
     - task: Bash@3
       displayName: 'Install Dependencies'
       inputs:
