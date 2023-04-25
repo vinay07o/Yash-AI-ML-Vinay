@@ -21,6 +21,9 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
+steps:
+
+
 stages:
 - stage: 'Model_CI'
   displayName: 'Model CI'
@@ -36,12 +39,12 @@ stages:
         versionSpec: 3.8
 
     - task: Bash@3
-      displayName: 'Install Dependencies '
+      displayName: 'Install Dependencies'
       inputs:
         targetType: filePath
-        filePath: 'package_requirement/install_requirements.sh'
+        filePath: 'package_requirement\requirements.txt'
         workingDirectory: 'package_requirement'
-        
+
     - template: code-quality-template.yml
     - task: AzureCLI@1
       inputs:
