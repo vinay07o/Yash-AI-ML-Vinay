@@ -7,8 +7,6 @@ pytest-cov==2.10.1
 inference-schema[numpy-support]==1.2.1
 lightgbm==3.2.1
 black
-pytest==5.4.*
-pytest-cov==2.8.*
 requests==2.23.*
 python-dotenv==0.12.*
 flake8==3.7.*
