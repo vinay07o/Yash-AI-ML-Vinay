@@ -62,18 +62,17 @@ def main():
 
         # Upload file to default datastore in workspace
         datatstore = Datastore.get(aml_workspace, datastore_name)
-        target_path = "training-data/"
+
         datatstore.upload_files(
             files=[file_name],
-            target_path=target_path,
+            target_path="",
             overwrite=True,
             show_progress=False,
         )
 
         # Register dataset
-        path_on_datastore = os.path.join(target_path, file_name)
         dataset = Dataset.Tabular.from_delimited_files(
-            path=(datatstore, path_on_datastore)
+            path=(datatstore, "insurance_claims.csv")
         )
         dataset = dataset.register(
             workspace=aml_workspace,
