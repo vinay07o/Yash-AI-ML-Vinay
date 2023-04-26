@@ -30,11 +30,6 @@ stages:
     container: mlops
     timeoutInMinutes: 0
     steps:
-    - task: UsePythonVersion@0
-      displayName: 'Use Python 3.6.9'
-      inputs:
-        versionSpec: 3.6.9
-
     - template: code-quality-template.yml
     - task: AzureCLI@1
       inputs:
