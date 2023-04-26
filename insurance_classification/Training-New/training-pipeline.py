@@ -25,8 +25,6 @@ new_run = Run.get_context()
 ws = new_run.experiment.workspace
 
 # Get parameters
-import argparse
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--n_estimators", type=int)
 parser.add_argument("--min_samples_leaf", type=int)

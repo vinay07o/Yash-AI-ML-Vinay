@@ -31,10 +31,10 @@ def Preprocessing(df):
     # we will replace the '?' by the most common collision type as we are unaware of the type.
     df["collision_type"].fillna(df["collision_type"].mode()[0], inplace=True)
 
-    # It may be the case that there are no responses for property damage then we might take it as No property damage.
+    # Encoding property_damage variable
     df["property_damage"].fillna("NO", inplace=True)
 
-    # again, if there are no responses fpr police report available then we might take it as No report available
+    # Encoding police_report_available variable
     df["police_report_available"].fillna("NO", inplace=True)
 
     # let's extrat days, month and year from policy bind date

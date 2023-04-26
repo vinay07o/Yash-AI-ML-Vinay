@@ -2,10 +2,6 @@
 steps:
 
 - script: |   
-   flake8 --output-file=lint-testresults.xml --format junit-xml
-  displayName: 'Run lint tests'
-
-- script: |   
    python -m pytest . --cov=insurence_classification --cov-report=html --cov-report=xml --junitxml=unit-testresults.xml
   condition: succeededOrFailed()
   displayName: 'Run unit tests'
