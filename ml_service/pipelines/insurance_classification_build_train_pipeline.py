@@ -1,5 +1,5 @@
 # testing files
-from azureml.core import Workspace
+from azureml.core import Workspace, Datastore, Dataset
 from azureml.core.runconfig import RunConfiguration
 from ml_service.util.attach_compute import get_compute
 from ml_service.util.env_variables import Env
