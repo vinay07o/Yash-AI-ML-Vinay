@@ -46,8 +46,8 @@ def main():
         aml_workspace,
         e.aml_env_name,
         conda_dependencies_file=e.aml_env_train_conda_dep_file,
-        create_new=e.rebuild_env,
-    )  #
+        create_new=True,
+    )  
     run_config = RunConfiguration()
     run_config.environment = environment
     run_config.target = aml_compute
