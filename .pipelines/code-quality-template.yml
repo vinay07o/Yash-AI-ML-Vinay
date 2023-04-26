@@ -1,8 +1,5 @@
 # Pipeline template to run linting, unit tests with code coverage, and publish the results.
 steps:
-- script: |
-   pip install -r requirements.txt
-  displayName: 'Dependencies Installing'
 
 - script: |
    black insurance_classification/
