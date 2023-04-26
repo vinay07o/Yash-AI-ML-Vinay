@@ -150,7 +150,7 @@ def main():
         source_directory=".",
         script_name="insurance_classification/Pre-processing/Pre-Processing.py",
         inputs=[input_ds.as_named_input("insurance_ds")],
-        outputs=[pipeline_data],
+        outputs=[dataFolder],
         runconfig=run_config,
         arguments=["--datafolder", dataFolder],
     )
