@@ -81,6 +81,8 @@ def main():
             tags={"format": "CSV"},
             create_new_version=True,
         )
+    else:
+        print("Dataset already registered.")
 
 
 if __name__ == "__main__":
