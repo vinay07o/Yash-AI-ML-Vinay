@@ -60,28 +60,28 @@ def main():
                 % file_name
             )  # NOQA: E501
 
-        # # Upload file to default datastore in workspace
-        # datatstore = Datastore.get(aml_workspace, datastore_name)
-        # target_path = "training-data/"
-        # datatstore.upload_files(
-        #     files=[file_name],
-        #     target_path=target_path,
-        #     overwrite=True,
-        #     show_progress=False,
-        # )
+        # Upload file to default datastore in workspace
+        datatstore = Datastore.get(aml_workspace, datastore_name)
+        target_path = "training-data/"
+        datatstore.upload_files(
+            files=[file_name],
+            target_path=target_path,
+            overwrite=True,
+            show_progress=False,
+        )
 
-        # # Register dataset
-        # path_on_datastore = os.path.join(target_path, file_name)
-        # dataset = Dataset.Tabular.from_delimited_files(
-        #     path=(datatstore, path_on_datastore)
-        # )
-        # dataset = dataset.register(
-        #     workspace=aml_workspace,
-        #     name=dataset_name,
-        #     description="insurance training data",
-        #     tags={"format": "CSV"},
-        #     create_new_version=True,
-        # )
+        # Register dataset
+        path_on_datastore = os.path.join(target_path, file_name)
+        dataset = Dataset.Tabular.from_delimited_files(
+            path=(datatstore, path_on_datastore)
+        )
+        dataset = dataset.register(
+            workspace=aml_workspace,
+            name=dataset_name,
+            description="insurance training data",
+            tags={"format": "CSV"},
+            create_new_version=True,
+        )
 
 
 if __name__ == "__main__":

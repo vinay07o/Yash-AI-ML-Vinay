@@ -24,8 +24,8 @@ variables:
   - name: DATASET_NAME
     value: insurance_ds
   # Uncomment DATASTORE_NAME if you have configured non default datastore to point to your data
-  - name: DATASTORE_NAME
-    value: insurance_datastore
+  # - name: DATASTORE_NAME
+  #   value: insurance_datastore
   - name: DATASET_VERSION
     value: latest
   - name: TRAINING_PIPELINE_NAME
