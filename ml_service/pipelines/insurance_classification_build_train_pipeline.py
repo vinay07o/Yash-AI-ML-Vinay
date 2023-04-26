@@ -50,6 +50,7 @@ def main():
     )  #
     run_config = RunConfiguration()
     run_config.environment = environment
+    run_config.target = aml_compute
 
     registered_env = Environment.get(aml_workspace, e.aml_env_name)
 
