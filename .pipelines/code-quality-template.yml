@@ -1,10 +1,6 @@
 # Pipeline template to run linting, unit tests with code coverage, and publish the results.
 steps:
 
-- script: |
-   black insurance_classification/
-  displayName: 'Auto Formatting Codes'
-
 - script: |   
    flake8 --output-file=lint-testresults.xml --format junit-xml
   displayName: 'Run lint tests'
