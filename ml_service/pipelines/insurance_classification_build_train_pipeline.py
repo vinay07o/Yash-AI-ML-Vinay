@@ -1,10 +1,27 @@
 # testing files
-from azureml.core import Workspace, Datastore, Dataset
+import os
+
+from azureml.core import (
+    Dataset,
+    Datastore,
+    Environment,
+    Experiment,
+    ScriptRunConfig,
+    Workspace,
+)
 from azureml.core.runconfig import RunConfiguration
+from azureml.pipeline.core import Pipeline, PipelineData
+from azureml.pipeline.steps import HyperDriveStep, PythonScriptStep
+from azureml.train.hyperdrive import (
+    HyperDriveConfig,
+    PrimaryMetricGoal,
+    RandomParameterSampling,
+    choice,
+)
+
 from ml_service.util.attach_compute import get_compute
 from ml_service.util.env_variables import Env
 from ml_service.util.manage_environment import get_environment
-import os
 
 
 def main():
@@ -33,6 +50,8 @@ def main():
     )  #
     run_config = RunConfiguration()
     run_config.environment = environment
+
+    registered_env = Environment.get(aml_workspace, e.aml_env_name)
 
     if e.datastore_name:
         datastore_name = e.datastore_name
@@ -83,6 +102,79 @@ def main():
         )
     else:
         print("Dataset already registered.")
+
+    # Create a PipelineData to pass data between steps
+    pipeline_data = PipelineData(
+        "pipeline_data", datastore=aml_workspace.get_default_datastore()
+    )
+
+    # Getting Data
+    input_ds = aml_workspace.datasets.get("insurance_ds")
+
+    dataFolder = PipelineData(
+        "datafolder", datastore=aml_workspace.get_default_datastore()
+    )
+    dataFolderoutput = PipelineData(
+        "datafolderoutput", datastore=aml_workspace.get_default_datastore()
+    )
+
+    # creating Hyperdrive sampling
+    hyper_params = RandomParameterSampling(
+        {
+            "--n_estimators": choice(range(10, 100, 10)),
+            "--min_samples_leaf": choice(range(1, 10)),
+            "--max_depth": choice(range(1, 10)),
+        }
+    )
+
+    script_config = ScriptRunConfig(
+        source_directory=".",
+        script="insurance_classification/Training-New/training-pipeline.py",
+        arguments=["--datafolder", dataFolder],
+        environment=registered_env,
+        compute_target=aml_compute,
+    )
+
+    hd_config = HyperDriveConfig(
+        run_config=script_config,
+        hyperparameter_sampling=hyper_params,
+        policy=None,
+        primary_metric_name="Accuracy",
+        primary_metric_goal=PrimaryMetricGoal.MAXIMIZE,
+        max_total_runs=20,
+        max_concurrent_runs=2,
+    )
+    # Step 01 - Data Preparation
+    dataPrep_step = PythonScriptStep(
+        name="01 Data Preparation",
+        source_directory=".",
+        script_name="insurance_classification/Pre-processing/Pre-Processing.py",
+        inputs=[input_ds.as_named_input("insurance_ds")],
+        outputs=[pipeline_data],
+        runconfig=run_config,
+        arguments=["--datafolder", dataFolder],
+    )
+
+    # Setup Hyperdrivestep for pipeline creation
+    hd_step = HyperDriveStep(
+        name="02 Tune Model",
+        hyperdrive_config=hd_config,
+        inputs=[dataFolder],
+        metrics_output=dataFolderoutput,
+    )
+
+    # Creating Pipeline
+    train_pipeline = Pipeline(workspace=aml_workspace, steps=[dataPrep_step, hd_step])
+
+    train_pipeline._set_experiment_name
+    train_pipeline.validate()
+    published_pipeline = train_pipeline.publish(
+        name=e.pipeline_name,
+        description="Model training/retraining pipeline",
+        version=e.build_id,
+    )
+    print(f"Published pipeline: {published_pipeline.name}")
+    print(f"for build {published_pipeline.version}")
 
 
 if __name__ == "__main__":
