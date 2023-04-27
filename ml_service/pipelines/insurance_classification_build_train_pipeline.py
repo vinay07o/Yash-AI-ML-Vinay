@@ -158,14 +158,29 @@ def main():
 
     # Setup Hyperdrivestep for pipeline creation
     hd_step = HyperDriveStep(
-        name="02 Tune Model",
+        name="02 Train & Tune Model",
         hyperdrive_config=hd_config,
         inputs=[dataFolder],
         metrics_output=dataFolderoutput,
     )
 
+    evaluate_step = PythonScriptStep(
+        name="03 Evaluate Model",
+        script_name=e.evaluate_script_path,
+        source_directory=e.sources_directory_train,
+        arguments=[
+            "--model_name",
+            "insurance_classification.pkl",
+            "--allow_run_cancel",
+            e.allow_run_cancel,
+        ],
+        runconfig=run_config,
+        allow_reuse=False,
+    )
+    print("Step Evaluate created")
+
     # Creating Pipeline
-    train_pipeline = Pipeline(workspace=aml_workspace, steps=[dataPrep_step, hd_step])
+    train_pipeline = Pipeline(workspace=aml_workspace, steps=[dataPrep_step, hd_step, evaluate_step])
 
     train_pipeline._set_experiment_name
     train_pipeline.validate()
