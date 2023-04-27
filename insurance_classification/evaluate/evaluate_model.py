@@ -1,13 +1,32 @@
+import os
 from azureml.core import Run
 import argparse
 import traceback
-from model_helper import get_model
+from azureml.core import Run
+from azureml.core import Workspace, Experiment
+from azureml.core.model import Model as AMLModel
 
 run = Run.get_context()
 
-exp = run.experiment
-ws = run.experiment.workspace
-run_id = 'amlcompute'
+if (run.id.startswith('OfflineRun')):
+    print("exception")
+
+    workspace_name = os.environ.get("AML-WorkSpace")
+    experiment_name = "mlopspython"
+    resource_group = ""
+    subscription_id = os.environ.get("SUBSCRIPTION_ID")
+
+    aml_workspace = Workspace.get(
+        name="AML-WorkSpace",
+        subscription_id="329034d6-eb63-442d-8652-e7e83d49a345",
+        resource_group='V1-ML-RG',
+    )
+    ws = aml_workspace
+    exp = Experiment(ws, "mlopspython")
+else:
+    ws = run.experiment.workspace
+    exp = run.experiment
+    run_id = 'amlcompute'
 
 parser = argparse.ArgumentParser("evaluate")
 
@@ -32,10 +51,6 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
-if (args.run_id is not None):
-    run_id = args.run_id
-if (run_id == 'amlcompute'):
-    run_id = run.parent.id
 model_name = args.model_name
 metric_eval = "accuracy"
 
@@ -47,21 +62,26 @@ try:
     firstRegistration = False
     tag_name = 'experiment_name'
 
-    model = get_model(
-                model_name=model_name,
-                tag_name=tag_name,
-                tag_value=exp.name,
-                aml_workspace=ws)
+    models = AMLModel.list(
+            aml_workspace, name=model_name, tags=None, latest=True)
+    if len(models) == 1:
+        model = models[0]
+    elif len(models) > 1:
+        raise Exception("Expected only one model")
     
     if (model is not None):
-        production_model_mse = 10000
+        production_model_accuracy = 10000
         if (metric_eval in model.tags):
-            production_model_mse = float(model.tags[metric_eval])
+            production_model_accuracy = float(model.tags[metric_eval])
         try:
-            new_model_mse = float(run.parent.get_metrics().get(metric_eval))
+            run_pipeline = [i for i in exp.get_runs()][0]
+            training_job = [i for i in run_pipeline.get_children()][2]
+            best_run_value = [best_run.get_children_sorted_by_primary_metric()[0] for best_run in training_job.get_children()]
+
+            new_model_accuracy = float(best_run_value[0]['best_primary_metric'])
         except TypeError:
-            new_model_mse = None
-        if (production_model_mse is None or new_model_mse is None):
+            new_model_accuracy = None
+        if (production_model_accuracy is None or new_model_accuracy is None):
             print("Unable to find ", metric_eval, " metrics, "
                   "exiting evaluation")
             if((allow_run_cancel).lower() == 'true'):
@@ -69,13 +89,13 @@ try:
         else:
             print(
                 "Current Production model {}: {}, ".format(
-                    metric_eval, production_model_mse) +
+                    metric_eval, production_model_accuracy) +
                 "New trained model {}: {}".format(
-                    metric_eval, new_model_mse
+                    metric_eval, new_model_accuracy
                 )
             )
 
-        if (new_model_mse < production_model_mse):
+        if (new_model_accuracy < production_model_accuracy):
             print("New trained model performs better, "
                   "thus it should be registered")
         else:

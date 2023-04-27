@@ -204,7 +204,7 @@ def main():
         steps = [dataPrep_step, hd_step, register_step]
 
     # Creating Pipeline
-    train_pipeline = Pipeline(workspace=aml_workspace, steps=[dataPrep_step, hd_step, register_step])
+    train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
 
     train_pipeline._set_experiment_name
     train_pipeline.validate()
