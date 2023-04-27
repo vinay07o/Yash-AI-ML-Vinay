@@ -179,8 +179,32 @@ def main():
     )
     print("Step Evaluate created")
 
+    register_step = PythonScriptStep(
+        name="Register Model ",
+        script_name="insurance_classification/register/register_model.py",
+        source_directory='.',
+        inputs=[dataFolderoutput],
+        arguments=["--model_name", "insurance_classification.pkl", "--step_input", dataFolderoutput],  # NOQA: E501
+        runconfig=run_config,
+        allow_reuse=False,
+    )
+    print("Step Register created")
+
+    # Check run_evaluation flag to include or exclude evaluation step.
+    if (e.run_evaluation).lower() == "true":
+        print("Include evaluation step before register step.")
+        hd_step.run_after(dataPrep_step)
+        evaluate_step.run_after(hd_step)
+        register_step.run_after(evaluate_step)
+        steps = [dataPrep_step, hd_step, evaluate_step, register_step]
+    else:
+        print("Exclude evaluation step and directly run register step.")
+        hd_step.run_after(dataPrep_step)
+        register_step.run_after(hd_step)
+        steps = [dataPrep_step, hd_step, register_step]
+
     # Creating Pipeline
-    train_pipeline = Pipeline(workspace=aml_workspace, steps=[dataPrep_step, hd_step, evaluate_step])
+    train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
 
     train_pipeline._set_experiment_name
     train_pipeline.validate()
