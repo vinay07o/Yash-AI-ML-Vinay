@@ -1,7 +1,7 @@
 from azureml.core import Run
 import argparse
 import traceback
-from util.model_helper import get_model
+from model_helper import get_model
 
 run = Run.get_context()
 

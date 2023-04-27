@@ -142,7 +142,7 @@ def main():
         policy=None,
         primary_metric_name="Accuracy",
         primary_metric_goal=PrimaryMetricGoal.MAXIMIZE,
-        max_total_runs=20,
+        max_total_runs=5,
         max_concurrent_runs=2,
     )
     # Step 01 - Data Preparation
