@@ -130,7 +130,7 @@ def main():
 
     script_config = ScriptRunConfig(
         source_directory=".",
-        script="insurance_classification/Training-New/training-pipeline.py",
+        script="insurance_classification/training/train.py",
         arguments=["--datafolder", dataFolder],
         environment=registered_env,
         compute_target=aml_compute,

@@ -1,40 +1,29 @@
 """
-Copyright (C) Microsoft Corporation. All rights reserved.​
- ​
-Microsoft Corporation (“Microsoft”) grants you a nonexclusive, perpetual,
-royalty-free right to use, copy, and modify the software code provided by us
-("Software Code"). You may not sublicense the Software Code or any use of it
-(except to your affiliates and to vendors to perform work on your behalf)
-through distribution, network access, service agreement, lease, rental, or
-otherwise. This license does not purport to express any claim of ownership over
-data you may have shared with Microsoft in the creation of the Software Code.
-Unless applicable law gives you more rights, Microsoft reserves all other
-rights not expressly granted herein, whether by implication, estoppel or
-otherwise. ​
- ​
-THE SOFTWARE CODE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-MICROSOFT OR ITS LICENSORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
-IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
+Training Code
 """
 
 import os
+import argparse
 import pandas as pd
-from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_squared_error
+import joblib
+from azureml.core import Run
+from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+)
 
 
 # Split the dataframe into test and train data
-def split_data(df):
-    X = df.drop('Y', axis=1).values
-    y = df['Y'].values
+def split_data(df, Y):
+    """Split data into train and test."""
+    X = df.drop(Y, axis=1).values
+    y = df[Y].values
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=0)
@@ -43,41 +32,99 @@ def split_data(df):
     return data
 
 
+def data_balance(X_train, y_train):
+    """Balancing imbalanced data using SMOTE."""
+    sm = SMOTE(random_state=42)
+    X_res, y_res = sm.fit_resample(X_train, y_train)
+    data_balanced = {'balanced_X':X_res, 'balanced_y':y_res}
+    return data_balanced
+
 # Train the model, return the model
-def train_model(data, ridge_args):
-    reg_model = Ridge(**ridge_args)
-    reg_model.fit(data["train"]["X"], data["train"]["y"])
-    return reg_model
+def model_training(X_res, y_res, ne, msl, md):
+    "Model Traing with RFC."
+    rfc = RandomForestClassifier(
+        n_estimators=ne, min_samples_leaf=msl, random_state=20, max_depth=md
+    )
+    rfcg = rfc.fit(X_res, y_res)  # fit on training data
+    return rfcg
 
 
 # Evaluate the metrics for the model
 def get_model_metrics(model, data):
+    """Get classification matrics."""
     preds = model.predict(data["test"]["X"])
-    mse = mean_squared_error(preds, data["test"]["y"])
-    metrics = {"mse": mse}
+    accuracy = accuracy_score(data["test"]["y"], preds)
+    cm = confusion_matrix(data["test"]["y"], preds)
+    recall = recall_score(data["test"]["y"], preds)
+    precision = precision_score(data["test"]["y"], preds)
+    f1_sco = f1_score(data["test"]["y"], preds)
+    # Create the confusion matrix dictionary
+    cm_dict = {
+        "schema_type": "confusion_matrix",
+        "schema_version": "v1",
+        "data": {"class_labels": ["N", "Y"], "matrix": cm.tolist()},
+    }
+    metrics = {"accuracy": accuracy, "confusion_matrix":cm, 
+               "recall_score":recall, "precision_score": precision, 
+               "f1_score": f1_sco, "confusion_matrix_dict": cm_dict}
+    
     return metrics
 
 
 def main():
     print("Running train.py")
 
-    # Define training parameters
-    ridge_args = {"alpha": 0.5}
+    # Get the context of the experiment run
+    new_run = Run.get_context()
 
-    # Load the training data as dataframe
-    data_dir = "data"
-    data_file = os.path.join(data_dir, 'diabetes.csv')
-    train_df = pd.read_csv(data_file)
+    # Access the Workspace
+    workspace = new_run.experiment.workspace
 
-    data = split_data(train_df)
+    # Get parameters
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--n_estimators", type=int)
+    parser.add_argument("--min_samples_leaf", type=int)
+    parser.add_argument("--max_depth", type=int)
+    parser.add_argument("--datafolder", type=str)
 
-    # Train the model
-    model = train_model(data, ridge_args)
+    args, unknown = parser.parse_known_args()
 
-    # Log the metrics for the model
-    metrics = get_model_metrics(model, data)
-    for (k, v) in metrics.items():
-        print(f"{k}: {v}")
+    ne = args.n_estimators
+    msl = args.min_samples_leaf
+    md = args.max_depth
+
+    # Read the data from the previous step
+    path = os.path.join(args.datafolder, "InsuranceData_prep_2.csv")
+
+    # Reading data
+    dataPrep = pd.read_csv(path)
+
+    # data splitting 
+    data_split = split_data(dataPrep, "fraud_reported")
+
+    # Balancing data
+    df_dict_bal = data_balance(data_split['train']['X'], data_split['train']['y'])
+
+    # Model training
+    fitted_ob = model_training(df_dict_bal['balanced_X'], df_dict_bal['balanced_y'], ne, msl, md)
+
+    # model evaluation
+    model_mtrics_dict = get_model_metrics(fitted_ob, data_split)
+
+    # logging metrics on workspace
+    new_run.log("TotalObservations", len(dataPrep))
+    new_run.log_confusion_matrix("ConfusionMatrix", model_mtrics_dict['confusion_matrix_dict'])
+    new_run.log("Accuracy", model_mtrics_dict['accuracy'])
+    new_run.log("Precision", model_mtrics_dict['precision_score'])
+    new_run.log("Recall", model_mtrics_dict['recall_score'])
+    new_run.log("F1 Score", model_mtrics_dict['f1_score'])
+
+    # Save the model in the run outputs
+    os.makedirs("outputs", exist_ok=True)
+    joblib.dump(value=fitted_ob, filename="outputs/insurance_classification.pkl")
+
+    # Complete the run
+    new_run.complete()
 
 
 if __name__ == '__main__':
