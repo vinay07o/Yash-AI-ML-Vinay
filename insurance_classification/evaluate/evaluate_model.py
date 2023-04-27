@@ -63,7 +63,7 @@ try:
     tag_name = 'experiment_name'
 
     models = AMLModel.list(
-            aml_workspace, name=model_name, tags=None, latest=True)
+            ws, name=model_name, tags=None, latest=True)
     if len(models) == 1:
         model = models[0]
     elif len(models) > 1:
