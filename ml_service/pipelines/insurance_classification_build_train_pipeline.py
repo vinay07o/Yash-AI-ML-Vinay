@@ -166,8 +166,8 @@ def main():
 
     evaluate_step = PythonScriptStep(
         name="03 Evaluate Model",
-        script_name=e.evaluate_script_path,
-        source_directory=e.sources_directory_train,
+        script_name="insurance_classification/evaluate/evaluate_model.py",
+        source_directory='.',
         arguments=[
             "--model_name",
             "insurance_classification.pkl",
