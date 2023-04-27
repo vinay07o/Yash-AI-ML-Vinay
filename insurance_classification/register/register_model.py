@@ -45,8 +45,6 @@ def main():
     )
 
     args = parser.parse_args()
-    if (args.run_id is not None):
-        run_id = args.run_id
     if (run_id == 'amlcompute'):
         run_id = run.parent.id
     model_name = args.model_name
