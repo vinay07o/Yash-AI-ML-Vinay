@@ -64,6 +64,7 @@ try:
 
     models = AMLModel.list(
             ws, name=model_name, tags=None, latest=True)
+    model = None
     if len(models) == 1:
         model = models[0]
     elif len(models) > 1:
