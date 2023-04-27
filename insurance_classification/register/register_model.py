@@ -89,3 +89,6 @@ def main():
     ran_ob.register_model(model_path='outputs/insurance_classification.pkl', model_name=model_name,
                         properties={'Accuracy': best_run_value[0]['best_primary_metric'], 'ConfusionMatrix': ran_ob.get_metrics()['ConfusionMatrix']},
                         tags = tags )
+
+if __name__ == '__main__':
+    main()

@@ -180,11 +180,11 @@ def main():
     print("Step Evaluate created")
 
     register_step = PythonScriptStep(
-        name="Register Model ",
+        name="04 Register Model ",
         script_name="insurance_classification/register/register_model.py",
         source_directory='.',
         inputs=[dataFolderoutput],
-        arguments=["--model_name", "insurance_classification.pkl", "--step_input", dataFolderoutput],  # NOQA: E501
+        arguments=["--model_name", "insurance_classification", "--step_input", dataFolderoutput],  # NOQA: E501
         runconfig=run_config,
         allow_reuse=False,
     )
@@ -204,7 +204,7 @@ def main():
         steps = [dataPrep_step, hd_step, register_step]
 
     # Creating Pipeline
-    train_pipeline = Pipeline(workspace=aml_workspace, steps=steps)
+    train_pipeline = Pipeline(workspace=aml_workspace, steps=[dataPrep_step, hd_step, register_step])
 
     train_pipeline._set_experiment_name
     train_pipeline.validate()
