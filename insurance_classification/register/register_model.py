@@ -1,12 +1,8 @@
 """Model register codes"""
 import json
 import os
-import sys
 import argparse
-import traceback
-import joblib
-from azureml.core import Run, Experiment, Workspace, Dataset
-from azureml.core.model import Model as AMLModel
+from azureml.core import Run, Experiment, Workspace
 
 def main():
 
@@ -36,16 +32,10 @@ def main():
     parser = argparse.ArgumentParser("register")
 
     parser.add_argument(
-        "--run_id",
-        type=str,
-        help="Training run ID",
-    )
-
-    parser.add_argument(
         "--model_name",
         type=str,
         help="Name of the Model",
-        default="diabetes_model.pkl",
+        default="insurance_classification.pkl",
     )
 
     parser.add_argument(
@@ -83,102 +73,19 @@ def main():
 
     # load the model
     print("Loading model from " + model_path)
-    model_file = os.path.join(model_path, model_name)
-    model = joblib.load(model_file)
-    parent_tags = run.parent.get_tags()
-    try:
-        build_id = parent_tags["BuildId"]
-    except KeyError:
-        build_id = None
-        print("BuildId tag not found on parent run.")
-        print(f"Tags present: {parent_tags}")
-    try:
-        build_uri = parent_tags["BuildUri"]
-    except KeyError:
-        build_uri = None
-        print("BuildUri tag not found on parent run.")
-        print(f"Tags present: {parent_tags}")
 
-    if (model is not None):
-        dataset_id = parent_tags["dataset_id"]
-        if (build_id is None):
-            register_aml_model(
-                model_file,
-                model_name,
-                model_tags,
-                exp,
-                run_id,
-                dataset_id)
-        elif (build_uri is None):
-            register_aml_model(
-                model_file,
-                model_name,
-                model_tags,
-                exp,
-                run_id,
-                dataset_id,
-                build_id)
-        else:
-            register_aml_model(
-                model_file,
-                model_name,
-                model_tags,
-                exp,
-                run_id,
-                dataset_id,
-                build_id,
-                build_uri)
+    run_pipeline = [i for i in exp.get_runs()][0]
 
+    training_job = [i for i in run_pipeline.get_children()][2]
 
-def model_already_registered(model_name, exp, run_id):
-    model_list = AMLModel.list(exp.workspace, name=model_name, run_id=run_id)
-    if len(model_list) >= 1:
-        e = ("Model name:", model_name, "in workspace",
-             exp.workspace, "with run_id ", run_id, "is already registered.")
-        print(e)
-        raise Exception(e)
-    else:
-        print("Model is not registered for this run.")
+    best_run_value = [best_run.get_children_sorted_by_primary_metric()[0] for best_run in training_job.get_children()]
 
+    ran_ob = Run(exp, best_run_value[0]['run_id'])
 
-def register_aml_model(
-    model_path,
-    model_name,
-    model_tags,
-    exp,
-    run_id,
-    dataset_id,
-    build_id: str = 'none',
-    build_uri=None
-):
-    try:
-        tagsValue = {"area": "insurance_classification",
-                     "run_id": run_id,
-                     "experiment_name": exp.name}
-        tagsValue.update(model_tags)
-        if (build_id != 'none'):
-            model_already_registered(model_name, exp, run_id)
-            tagsValue["BuildId"] = build_id
-            if (build_uri is not None):
-                tagsValue["BuildUri"] = build_uri
+    tags = {'accuracy': best_run_value[0]['best_primary_metric'], "area": "insurance_classification", "experiment_name": exp.name}
 
-        model = AMLModel.register(
-            workspace=exp.workspace,
-            model_name=model_name,
-            model_path=model_path,
-            tags=tagsValue,
-            datasets=[('training data',
-                       Dataset.get_by_id(exp.workspace, dataset_id))])
-        os.chdir("..")
-        print(
-            "Model registered: {} \nModel Description: {} "
-            "\nModel Version: {}".format(
-                model.name, model.description, model.version
-            )
-        )
-    except Exception:
-        traceback.print_exc(limit=None, file=None, chain=True)
-        print("Model registration failed")
-        raise
+    ran_ob.get_metrics()['ConfusionMatrix']
 
-
+    ran_ob.register_model(model_path='outputs/insurance_classification.pkl', model_name=model_name,
+                        properties={'Accuracy': best_run_value[0]['best_primary_metric'], 'ConfusionMatrix': ran_ob.get_metrics()['ConfusionMatrix']},
+                        tags = tags )

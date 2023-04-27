@@ -45,8 +45,8 @@ def model_training(X_res, y_res, ne, msl, md):
     rfc = RandomForestClassifier(
         n_estimators=ne, min_samples_leaf=msl, random_state=20, max_depth=md
     )
-    rfcg = rfc.fit(X_res, y_res)  # fit on training data
-    return rfcg
+    rfc.fit(X_res, y_res)  # fit on training data
+    return rfc
 
 
 # Evaluate the metrics for the model
@@ -76,9 +76,6 @@ def main():
 
     # Get the context of the experiment run
     new_run = Run.get_context()
-
-    # Access the Workspace
-    workspace = new_run.experiment.workspace
 
     # Get parameters
     parser = argparse.ArgumentParser()
