@@ -20,6 +20,7 @@ variables:
 
 pool:
   vmImage: ubuntu-latest
+  name: Azure Pipelines
 
 stages:
 - stage: 'Model_CI'
@@ -30,6 +31,12 @@ stages:
     container: mlops
     timeoutInMinutes: 0
     steps:
+    - task: Bash@3
+      displayName: 'Dependencies install'
+      inputs:
+        targetType: filePath
+        filePath: './install_requirements.sh'
+
     - template: code-quality-template.yml
     - task: AzureCLI@1
       inputs:
