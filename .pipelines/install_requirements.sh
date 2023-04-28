@@ -30,6 +30,6 @@ conda env create -f ./ci_dependencies.yml
 
 source /usr/share/miniconda/etc/profile.d/conda.sh
 
-# source activate mlopspython_ci_yash_vinu
+# source activate mlopspython_ci_yash
 
 conda activate mlopspython_ci_yash_vinu
