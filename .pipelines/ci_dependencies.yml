@@ -24,3 +24,4 @@ dependencies:
       - azure-cli==2.3.*
       - setuptools==57.0.*
       - imblearn
+      - jsmin
