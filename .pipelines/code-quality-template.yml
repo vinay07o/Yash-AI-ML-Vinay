@@ -3,7 +3,7 @@ steps:
 
 - script: |
    black insurence_classification/
-  displayname: 'Running formatter'
+  displayName: 'Running formatter'
 
 - script: |   
    flake8 --output-file=lint-testresults.xml --format junit-xml
