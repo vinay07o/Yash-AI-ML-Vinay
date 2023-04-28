@@ -1,4 +1,4 @@
-name: mlopspython_ci_yash
+name: mlopspython_ci_yashvinu
 
 dependencies:
   # The python interpreter version.
