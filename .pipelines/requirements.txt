@@ -1,4 +1,4 @@
-setuptools==57.5.0
+setuptools==58
 scikit-learn
 joblib
 numpy
