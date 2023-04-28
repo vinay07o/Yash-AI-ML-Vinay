@@ -2,10 +2,6 @@
 steps:
 
 - script: |   
-   sh install_requirements
-  displayName: 'Run unit tests'
-
-- script: |   
    python -m pytest . --cov=insurence_classification --cov-report=html --cov-report=xml --junitxml=unit-testresults.xml
   condition: succeededOrFailed()
   displayName: 'Run unit tests'
