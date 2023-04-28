@@ -28,4 +28,6 @@ set -eux
 
 conda env create -f ./ci_dependencies.yml
 
+conda init bash
+
 conda activate mlopspython_ci_yash_vinu
