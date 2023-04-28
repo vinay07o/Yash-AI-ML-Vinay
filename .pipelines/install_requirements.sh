@@ -28,6 +28,8 @@ set -eux
 
 conda env create -f ./ci_dependencies.yml
 
+conda init
+
 source /usr/share/miniconda/etc/profile.d/conda.sh
 
 # source activate mlopspython_ci_yash
