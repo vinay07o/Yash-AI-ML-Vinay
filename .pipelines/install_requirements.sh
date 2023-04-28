@@ -32,4 +32,4 @@ source /usr/share/miniconda/etc/profile.d/conda.sh
 
 # source activate mlopspython_ci_yash
 
-conda activate mlopspython_ci_yash_vinu
+conda activate mlopspython_ci_yash
