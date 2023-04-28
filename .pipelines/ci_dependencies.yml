@@ -8,8 +8,6 @@ dependencies:
   - numpy
   - pandas
   - scikit-learn
-
-  - conda-forge::jq
   - pip=20.0.*
 
   - pip:
@@ -17,8 +15,8 @@ dependencies:
       - azureml-sdk==1.27.*
 
       # Additional pip dependencies for the CI environment.
-      - pytest==5.4.*
-      - pytest-cov==2.8.*
+      - pytest==
+      - pytest-cov
       - requests
       - python-dotenv==0.12.*
       - flake8==3.7.*
