@@ -15,9 +15,9 @@ dependencies:
       - azureml-sdk==1.27.*
 
       # Additional pip dependencies for the CI environment.
-      - pytest==
-      - pytest-cov
-      - requests
+      - pytest==5.4.*
+      - pytest-cov==2.8.*
+      - requests==2.23.*
       - python-dotenv==0.12.*
       - flake8==3.7.*
       - flake8_formatter_junit_xml==0.0.*
