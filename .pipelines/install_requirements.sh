@@ -2,4 +2,4 @@
 python --version
 pip install --upgrade azure-cli
 pip install --upgrade azureml-sdk
-pip install -U -r requirements.txt
+pip install --user -r requirements.txt
