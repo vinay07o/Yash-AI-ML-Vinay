@@ -7,3 +7,5 @@ pytest-cov
 inference-schema[numpy-support]
 lightgbm
 black
+imblearn
+scikit-learn
