@@ -2,7 +2,7 @@
 steps:
 
 - script: |   
-   sh package_requirement/install_requirements
+   sh install_requirements
   displayName: 'Run unit tests'
 
 - script: |   
