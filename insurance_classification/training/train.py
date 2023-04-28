@@ -34,7 +34,7 @@ def split_data(df, Y):
 
 def data_balance(X_train, y_train):
     """Balancing imbalanced data using SMOTE."""
-    sm = SMOTE(random_state=42)
+    sm = SMOTE(random_state=42, k_neighbors=3)
     X_res, y_res = sm.fit_resample(X_train, y_train)
     data_balanced = {'balanced_X':X_res, 'balanced_y':y_res}
     return data_balanced
