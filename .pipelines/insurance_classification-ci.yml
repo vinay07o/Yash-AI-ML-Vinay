@@ -35,7 +35,8 @@ stages:
       displayName: 'Dependencies install'
       inputs:
         targetType: filePath
-        filePath: './install_requirements.sh'
+        filePath: './.pipelines/install_requirements.sh'
+        workingDirectory: .pipelines
 
     - template: code-quality-template.yml
     - task: AzureCLI@1
