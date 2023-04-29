@@ -31,12 +31,8 @@ stages:
     container: mlops
     timeoutInMinutes: 0
     steps:
-    - task: Bash@3
-      displayName: 'Dependencies install'
-      inputs:
-        targetType: filePath
-        filePath: './.pipelines/install_requirements.sh'
-        workingDirectory: .pipelines
+    - bash: 'pip install --user -r ./.pipelines/requirements.txt'
+      displayName: 'Installing Dependencies'
 
     - template: code-quality-template.yml
     - task: AzureCLI@1
