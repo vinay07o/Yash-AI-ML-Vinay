@@ -34,6 +34,9 @@ stages:
     - bash: 'pip install --user -r ./.pipelines/requirements.txt'
       displayName: 'Installing Dependencies'
 
+    - bash: 'black ./ml_service'
+      displayName: 'Running black for Auto formatting'
+
     - template: code-quality-template.yml
     - task: AzureCLI@1
       inputs:
