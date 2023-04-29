@@ -30,8 +30,8 @@ conda env create -f ./ci_dependencies.yml
 
 conda init
 
-source /usr/share/miniconda/etc/profile.d/conda.sh
+source /usr/share/miniconda/etc/profile.d/conda.sh && conda activate mlopspython_ci_yashvinuone
 
 # source activate mlopspython_ci_yashvinuone
 
-conda activate mlopspython_ci_yashvinuone
+
