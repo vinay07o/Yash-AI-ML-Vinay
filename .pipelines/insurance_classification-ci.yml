@@ -35,10 +35,10 @@ stages:
       displayName: 'Installing Dependencies'
 
     
-    - bash: '/home/vsts_azpcontainer/.local/bin/black ./ml_service'
+    - bash: '/home/vsts_azpcontainer/.local/bin/black ./ml_service/ --config black.toml'
       displayName: 'Running black for Auto formatting for service codes'
 
-    - bash: '/home/vsts_azpcontainer/.local/bin/black ./insurance_classification'
+    - bash: '/home/vsts_azpcontainer/.local/bin/black ./insurance_classification/ --config black.toml' 
       displayName: 'Running black for Auto formatting for supporting function'
 
     - template: code-quality-template.yml

@@ -5,7 +5,6 @@ from azureml.core import (
     Dataset,
     Datastore,
     Environment,
-    Experiment,
     ScriptRunConfig,
     Workspace,
 )
@@ -103,11 +102,6 @@ def main():
         )
     else:
         print("Dataset already registered.")
-
-    # Create a PipelineData to pass data between steps
-    pipeline_data = PipelineData(
-        "pipeline_data", datastore=aml_workspace.get_default_datastore()
-    )
 
     # Getting Data
     input_ds = aml_workspace.datasets.get("insurance_ds")

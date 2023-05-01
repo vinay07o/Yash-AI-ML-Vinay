@@ -1,5 +1,4 @@
 """Model register codes"""
-import json
 import os
 import argparse
 from azureml.core import Run, Experiment, Workspace
@@ -48,29 +47,8 @@ def main():
     if (run_id == 'amlcompute'):
         run_id = run.parent.id
     model_name = args.model_name
-    model_path = args.step_input
 
     print("Getting registration parameters")
-
-    # # Load the registration parameters from the parameters file
-    # with open("parameters.json") as f:
-    #     pars = json.load(f)
-    # try:
-    #     register_args = pars["registration"]
-    # except KeyError:
-    #     print("Could not load registration values from file")
-    #     register_args = {"tags": []}
-
-    # model_tags = {}
-    # for tag in register_args["tags"]:
-    #     try:
-    #         mtag = run.parent.get_metrics()[tag]
-    #         model_tags[tag] = mtag
-    #     except KeyError:
-    #         print(f"Could not find {tag} metric on parent run.")
-
-    # load the model
-    # print("Loading model from " + model_path)
 
     run_pipeline = [i for i in exp.get_runs()][0]
 
