@@ -7,11 +7,11 @@ pr: none
 trigger:
   branches:
     include:
-    - master
+    - main
   paths:
     include:
     - insurance_classification/
-    - ml_service/pipelines/insurance_classification_build_train_pipeline.py
+    - ml_service/
 
 
 variables:
