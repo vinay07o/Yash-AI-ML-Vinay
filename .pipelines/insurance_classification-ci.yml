@@ -34,9 +34,12 @@ stages:
     - bash: 'pip install --user -r ./.pipelines/requirements.txt'
       displayName: 'Installing Dependencies'
 
-    - bash: '/home/vsts_azpcontainer/.local/bin/black ./insurance_classification'
+    
     - bash: '/home/vsts_azpcontainer/.local/bin/black ./ml_service'
-      displayName: 'Running black for Auto formatting'
+      displayName: 'Running black for Auto formatting for service codes'
+
+    - bash: '/home/vsts_azpcontainer/.local/bin/black ./insurance_classification'
+      displayName: 'Running black for Auto formatting for supporting function'
 
     - template: code-quality-template.yml
     - task: AzureCLI@1
