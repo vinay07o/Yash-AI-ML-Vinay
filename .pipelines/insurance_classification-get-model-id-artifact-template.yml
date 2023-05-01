@@ -35,6 +35,7 @@ steps:
       targetType: 'inline'
       script: |
         # Print JSON
+        ls $(Build.SourcesDirectory)/bin/
         cat $(Build.SourcesDirectory)/bin/model/model.json | jq '.'
 
         # Set model name and version variables
