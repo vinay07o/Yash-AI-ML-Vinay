@@ -2,7 +2,7 @@
 steps:
 
 - script: |   
-   flake8 --output-file=lint-testresults.xml --format junit-xml
+   flake8 --output-file=lint-testresults.xml --format junit-xml --settings-file ./setup.cfg
   displayName: 'Run lint tests'
 
 - script: |   
@@ -18,4 +18,11 @@ steps:
     failTaskOnFailedTests: true
   displayName: 'Publish test results'
 
-
+  - task: PublishCodeCoverageResults@1
+  displayName: 'Publish coverage report'
+  condition: succeededOrFailed()
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: 'coverage.xml'
+    reportDirectory: 'htmlcov'
+    failIfCoverageEmpty: true

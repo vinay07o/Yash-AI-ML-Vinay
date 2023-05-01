@@ -143,7 +143,7 @@ def main():
     dataPrep_step = PythonScriptStep(
         name="01 Data Preparation",
         source_directory=".",
-        script_name="insurance_classification/Pre-processing/preprocessing.py",
+        script_name="insurance_classification/Pre-processing/pre_processing.py",
         inputs=[input_ds.as_named_input("insurance_ds")],
         outputs=[dataFolder],
         runconfig=run_config,
