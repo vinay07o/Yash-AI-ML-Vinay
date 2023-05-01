@@ -21,7 +21,7 @@ resources:
     trigger:
       branches:
         include:
-        - master
+        - main
 
 variables:
 - template: insurance_classification-variables-template.yml
