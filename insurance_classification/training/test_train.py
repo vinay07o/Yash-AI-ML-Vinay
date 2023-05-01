@@ -6,6 +6,7 @@ from train import split_data, data_balance
 
 @pytest.fixture
 def syn_df():
+    np.random.seed(7)
     df = pd.DataFrame({'A':np.random.randint(0, 9, 10), 
                        'B':np.random.randint(0, 9, 10), 
                        'Y':np.random.randint(0, 2, 10)})

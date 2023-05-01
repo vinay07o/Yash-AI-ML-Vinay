@@ -33,7 +33,6 @@ stages:
     steps:
     - bash: 'pip install --user -r ./.pipelines/requirements.txt'
       displayName: 'Installing Dependencies'
-
     
     - bash: '/home/vsts_azpcontainer/.local/bin/black ./ml_service/ --config black.toml'
       displayName: 'Running black for Auto formatting for service codes'

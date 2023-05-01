@@ -2,7 +2,6 @@ import os
 from azureml.core import Run
 import argparse
 import traceback
-from azureml.core import Run
 from azureml.core import Workspace, Experiment
 from azureml.core.model import Model as AMLModel
 
