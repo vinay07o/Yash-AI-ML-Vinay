@@ -1,6 +1,9 @@
 setuptools==58
 scikit-learn==1.0.* 
 joblib==1.1.1
+pytest-cov==2.8.*
+requests==2.23.*
+python-dotenv==0.12.*
 numpy
 pandas
 pytest
