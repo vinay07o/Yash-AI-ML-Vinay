@@ -26,9 +26,7 @@ def Preprocessing(df):
     # if '?' in the datset which we have to remove by NaN Values
     df = df.replace("?", np.NaN)
 
-    # missing value treatment using fillna
-
-    # we will replace the '?' by the most common collision type as we are unaware of the type.
+    # Encoding collision_type variable.
     df["collision_type"].fillna(df["collision_type"].mode()[0], inplace=True)
 
     # Encoding property_damage variable
