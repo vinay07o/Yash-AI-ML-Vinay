@@ -2,7 +2,7 @@
 steps:
 
 - script: |   
-   flake8 --output-file=lint-testresults.xml --format junit-xml --settings-file ./setup.cfg
+   flake8 --output-file=lint-testresults.xml --format junit-xml --config ./setup.cfg
   displayName: 'Run lint tests'
 
 - script: |   
