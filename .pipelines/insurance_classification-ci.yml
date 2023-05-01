@@ -35,11 +35,11 @@ stages:
       displayName: 'Installing Dependencies'
     
     - bash: '/home/vsts_azpcontainer/.local/bin/black ./ml_service/ --config ./black.toml'
-    - bash: '/home/vsts_azpcontainer/.local/bin/isort ./ml_service/ --settings-file ./setup.cfg
+    - bash: '/home/vsts_azpcontainer/.local/bin/isort ./ml_service/ --settings-file ./setup.cfg'
       displayName: 'Running black & isort for Auto formatting for service codes'
 
     - bash: '/home/vsts_azpcontainer/.local/bin/black ./insurance_classification/ --config ./black.toml' 
-    - bash: '/home/vsts_azpcontainer/.local/bin/isort ./insurance_classification/ --settings-file ./setup.cfg
+    - bash: '/home/vsts_azpcontainer/.local/bin/isort ./insurance_classification/ --settings-file ./setup.cfg'
       displayName: 'Running black & isort for Auto formatting for supporting function'
 
     - template: code-quality-template.yml
