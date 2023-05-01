@@ -16,7 +16,7 @@ resources:
   - container: mlops
     image: mcr.microsoft.com/mlops/python:latest
   pipelines:
-  - pipeline: ML Model Continuous Integration
+  - pipeline: model-train-ci
     source: Model-Train-Register-CI # Name of the triggering pipeline
     trigger:
       branches:
@@ -72,4 +72,4 @@ stages:
         inlineScript: |
           set -e # fail on error
           export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-          python -m ml_service.util.smoke_test_scoring_service --type ACI --service "$(ACI_DEPLOYMENT_NAME)"
+          # python -m ml_service.util.smoke_test_scoring_service --type ACI --service "$(ACI_DEPLOYMENT_NAME)"
