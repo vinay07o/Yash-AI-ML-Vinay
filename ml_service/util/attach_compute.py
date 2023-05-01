@@ -1,4 +1,4 @@
-
+"""Create compute Codes"""
 import traceback
 from azureml.core import Workspace
 from azureml.core.compute import AmlCompute
