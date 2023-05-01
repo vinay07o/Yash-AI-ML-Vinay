@@ -18,7 +18,7 @@ steps:
     failTaskOnFailedTests: true
   displayName: 'Publish test results'
 
-  - task: PublishCodeCoverageResults@1
+- task: PublishCodeCoverageResults@1
   displayName: 'Publish coverage report'
   condition: succeededOrFailed()
   inputs:
