@@ -17,12 +17,3 @@ steps:
     testRunTitle: 'Linting & Unit tests'
     failTaskOnFailedTests: true
   displayName: 'Publish test results'
-
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish coverage report'
-  condition: succeededOrFailed()
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: 'coverage.xml'
-    reportDirectory: 'htmlcov'
-    failIfCoverageEmpty: true
