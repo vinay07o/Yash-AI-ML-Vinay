@@ -31,7 +31,7 @@ variables:
   - name: TRAINING_PIPELINE_NAME
     value: "insurance-Training-Pipeline"
   - name: MODEL_NAME
-    value: insurance_classification_model.pkl
+    value: insurance_classification.pkl
 
   # AML Compute Cluster Config
   - name: AML_ENV_NAME
