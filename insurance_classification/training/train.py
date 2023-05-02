@@ -118,7 +118,17 @@ def main():
 
     # Save the model in the run outputs
     os.makedirs("outputs", exist_ok=True)
+    output_path = os.path.join('outputs', "insurance_classification.pkl")
     joblib.dump(value=fitted_ob, filename="outputs/insurance_classification.pkl")
+
+    # upload the model file explicitly into artifacts
+    print("Uploading the model into run artifacts...")
+    new_run.upload_file(name="./outputs/models/" + "insurance_classification.pkl", path_or_stream=output_path)
+    print("Uploaded the model {} to experiment {}".format("insurance_classification.pkl", new_run.experiment.name))
+    dirpath = os.getcwd()
+    print("dir path: ", dirpath)
+    print("Following files are uploaded ")
+    print(new_run.get_file_names())
 
     # Complete the run
     new_run.complete()
