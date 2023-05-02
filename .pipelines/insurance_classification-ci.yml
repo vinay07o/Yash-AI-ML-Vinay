@@ -97,7 +97,7 @@ stages:
         ExperimentName: '$(EXPERIMENT_NAME)'
         PipelineParameters: '"ParameterAssignments": {"model_name": "$(MODEL_NAME)"}, "tags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}, "StepTags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}'
     
-    steps:
+
     - task: AzureCLI@2
       displayName: 'Downloading the model'
       inputs:
@@ -106,7 +106,7 @@ stages:
         scriptLocation: inlineScript
         inlineScript: 'az ml model download -g $(RESOURCE_GROUP) -w $(WORKSPACE_NAME) -i $(jq -r .modelId metadata/model.json) -t ./models --overwrite'
 
-    steps:
+
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
       inputs:
@@ -117,7 +117,7 @@ stages:
          **/.pipelines/*
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-    steps:
+
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Pipeline Artifact'
       inputs:
