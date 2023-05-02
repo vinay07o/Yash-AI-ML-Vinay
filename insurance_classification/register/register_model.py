@@ -1,5 +1,4 @@
 """Model register codes"""
-import json
 import os
 import argparse
 from azureml.core import Run, Experiment, Workspace
