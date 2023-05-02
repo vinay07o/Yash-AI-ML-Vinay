@@ -67,15 +67,6 @@ def main():
                         properties={'Accuracy': best_run_value[0]['best_primary_metric'], 'ConfusionMatrix': ran_ob.get_metrics()['ConfusionMatrix']},
                         tags = tags )
 
-    model_reg = ws.models['insurance_classification']
-    os.makedirs("model", exist_ok=True)
-    model_json = {'modelID': f"{model_reg.name}:{model_reg.version}", 
-                  "workspaceName": model_reg.workspace.name, 
-                  "resourceGroupName": model_reg.workspace.resource_group}
-    
-    
-    with open('model/model.json', 'w') as f:
-        json.dump(model_json, f)
 
 if __name__ == '__main__':
     main()
