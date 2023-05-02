@@ -34,7 +34,7 @@ stages:
 
     - bash: 'mkdir metadata && mkdir models'
       displayName: 'Make Metadata and Models directory'
-      
+
     - bash: 'pip install --user -r ./.pipelines/requirements.txt'
       displayName: 'Installing Dependencies'
     
@@ -100,39 +100,5 @@ stages:
         PipelineId: '$(AMLPIPELINE_ID)'
         ExperimentName: '$(EXPERIMENT_NAME)'
         PipelineParameters: '"ParameterAssignments": {"model_name": "$(MODEL_NAME)"}, "tags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}, "StepTags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}'  
-  - job: "publishing_artifact"
-    dependsOn: "Run_ML_Pipeline"
-    steps:
-    - task: AzureCLI@2
-      displayName: 'Add ml extension'
-      inputs:
-        azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: 'az extension add -n azure-cli-ml'
+    - template: insurance_classification-publish-model-artifact-template.yml
 
-    - task: AzureCLI@2
-      displayName: 'Downloading the model'
-      inputs:
-        azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: 'az ml model download -g $(RESOURCE_GROUP) -w $(WORKSPACE_NAME) -i $(jq -r .modelId metadata/model.json) -t ./models --overwrite'
-
-
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
-      inputs:
-        SourceFolder: '$(Build.SourcesDirectory)'
-        Contents: |
-         **/metadata/*
-         **/models/*
-         **/.pipelines/*
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Pipeline Artifact'
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)'
-        artifact: Landing
