@@ -31,6 +31,10 @@ stages:
     container: mlops
     timeoutInMinutes: 0
     steps:
+
+    - bash: 'mkdir metadata && mkdir models'
+      displayName: 'Make Metadata and Models directory'
+      
     - bash: 'pip install --user -r ./.pipelines/requirements.txt'
       displayName: 'Installing Dependencies'
     
@@ -95,8 +99,7 @@ stages:
         azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
         PipelineId: '$(AMLPIPELINE_ID)'
         ExperimentName: '$(EXPERIMENT_NAME)'
-        PipelineParameters: '"ParameterAssignments": {"model_name": "$(MODEL_NAME)"}, "tags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}, "StepTags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}'
-    
+        PipelineParameters: '"ParameterAssignments": {"model_name": "$(MODEL_NAME)"}, "tags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}, "StepTags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}'  
   - job: "publishing_artifact"
     dependsOn: "Run_ML_Pipeline"
     steps:
