@@ -100,5 +100,8 @@ stages:
         PipelineId: '$(AMLPIPELINE_ID)'
         ExperimentName: '$(EXPERIMENT_NAME)'
         PipelineParameters: '"ParameterAssignments": {"model_name": "$(MODEL_NAME)"}, "tags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}, "StepTags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}'  
+  - job: "Publish Pipeline"
+    dependsOn: "Run_ML_Pipeline"
+    steps:
     - template: insurance_classification-publish-model-artifact-template.yml
 
