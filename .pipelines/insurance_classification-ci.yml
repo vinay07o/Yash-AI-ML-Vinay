@@ -103,8 +103,36 @@ stages:
   - job: "publishing_artifact"
     dependsOn: "Run_ML_Pipeline"
     steps:
+    - task: AzureCLI@2
+      displayName: 'Add ml extension'
+      inputs:
+        azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: 'az extension add -n azure-cli-ml'
+
+    - task: AzureCLI@2
+      displayName: 'Downloading the model'
+      inputs:
+        azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: 'az ml model download -g $(RESOURCE_GROUP) -w $(WORKSPACE_NAME) -i $(jq -r .modelId model/model.json) -t ./models --overwrite'
+
+
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        Contents: |
+         **/model/*
+         **/models/*
+         **/.pipelines/*
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Pipeline Artifact'
       inputs:
-        targetPath: '$(Build.SourcesDirectory)'
+        targetPath: '$(Build.ArtifactStagingDirectory)'
         artifact: Landing
