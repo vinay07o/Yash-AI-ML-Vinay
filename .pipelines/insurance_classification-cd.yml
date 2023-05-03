@@ -63,7 +63,8 @@ stages:
           --ic inference_config.yml \
           --dc deployment_config_aci.yml \
           -g $(RESOURCE_GROUP) --workspace-name $(WORKSPACE_NAME) \
-          --overwrite -v
+          --overwrite -v \
+          --ai
     - task: AzureCLI@1
       displayName: 'Smoke test'
       inputs:
@@ -72,4 +73,4 @@ stages:
         inlineScript: |
           set -e # fail on error
           export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-          # python -m ml_service.util.smoke_test_scoring_service --type ACI --service "$(ACI_DEPLOYMENT_NAME)"
+          python -m ml_service.util.smoke_test_scoring_service --type ACI --service "$(ACI_DEPLOYMENT_NAME)"
