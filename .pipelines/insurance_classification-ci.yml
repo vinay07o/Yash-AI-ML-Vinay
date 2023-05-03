@@ -103,6 +103,6 @@ stages:
 
   - job: "Publish_pipeline"
     dependsOn: "Run_ML_Pipeline"
-    displayName: Publishing Pipeline"
+    displayName: "Publishing Pipeline"
     steps:
     - template: insurance_classification-publish-model-artifact-template.yml
