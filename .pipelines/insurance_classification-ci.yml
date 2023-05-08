@@ -87,7 +87,7 @@ stages:
       displayName: 'Get Pipeline ID & Trigger ML Training Pipeline'
 
   - job: "Publish_pipeline"
-    dependsOn: "Run_ML_Pipeline"
+    dependsOn: "Get_Pipeline_ID"
     displayName: "Publishing Pipeline"
     steps:
     - template: insurance_classification-publish-model-artifact-template.yml
