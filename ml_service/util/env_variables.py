@@ -49,6 +49,9 @@ class Env:
         "AML_REBUILD_ENVIRONMENT", "false"
     ).lower().strip() == "true"
 
+    sources_directory_train: Optional[str] = os.environ.get(
+        "SOURCES_DIR_TRAIN"
+    )  # NOQA: E501
     use_gpu_for_scoring: Optional[bool] = os.environ.get(
         "USE_GPU_FOR_SCORING", "false"
     ).lower().strip() == "true"

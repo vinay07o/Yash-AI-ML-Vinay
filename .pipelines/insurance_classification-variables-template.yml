@@ -3,7 +3,7 @@ variables:
   # Source Config
   # The directory containing the scripts for training, evaluating, and registering the model
   - name: SOURCES_DIR_TRAIN
-    value: insurance_classification    
+    value: insurance_classification
 
   # Azure ML Variables
   - name: EXPERIMENT_NAME
