@@ -14,6 +14,12 @@ def main():
         help="Name of a file to write pipeline ID to"
     )
 
+    parser.add_argument(
+        "--skip_train_execution",
+        action="store_true",
+        help=("Do not trigger the execution. "
+              "Use this in Azure DevOps when using a server job to trigger")
+    )
     args = parser.parse_args()
 
     e = Env()
