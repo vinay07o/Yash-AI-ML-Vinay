@@ -98,7 +98,7 @@ stages:
       displayName: 'Invoke ML pipeline'
       inputs:
         azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
-        PipelineId: '$(AMLPIPELINE_ID)'
+        PipelineId: 'd330a363-bd33-4a13-9b35-f9a444c570da'
         ExperimentName: '$(EXPERIMENT_NAME)'
         PipelineParameters: '"ParameterAssignments": {"model_name": "$(MODEL_NAME)"}, "tags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}, "StepTags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}'  
 
