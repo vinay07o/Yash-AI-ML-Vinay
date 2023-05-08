@@ -69,16 +69,6 @@ def main():
 
             print("Pipeline run initiated ", run.id)
 
-    model_reg = aml_workspace.models['insurance_classification']
-    os.makedirs("model", exist_ok=True)
-    model_json = {'modelId': f"{model_reg.name}:{model_reg.version}", 
-                "workspaceName": model_reg.workspace.name, 
-                "resourceGroupName": model_reg.workspace.resource_group}
-    
-    
-    with open('model/model.json', 'w') as f:
-        json.dump(model_json, f)
-
 
 if __name__ == "__main__":
     main()
