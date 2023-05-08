@@ -84,23 +84,7 @@ stages:
           AMLPIPELINEID="$(cat pipeline_id.txt)"
           echo "##vso[task.setvariable variable=AMLPIPELINEID;isOutput=true]$AMLPIPELINEID"
       name: 'getpipelineid'
-      displayName: 'Get Pipeline ID'
-
-  - job: "Run_ML_Pipeline"
-    dependsOn: "Get_Pipeline_ID"
-    displayName: "Trigger ML Training Pipeline"
-    timeoutInMinutes: 0
-    pool: server
-    variables:
-      AMLPIPELINE_ID: $[ dependencies.Get_Pipeline_ID.outputs['getpipelineid.AMLPIPELINEID'] ]
-    steps:
-    - task: ms-air-aiagility.vss-services-azureml.azureml-restApi-task.MLPublishedPipelineRestAPITask@0
-      displayName: 'Invoke ML pipeline'
-      inputs:
-        azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
-        PipelineId: 'd330a363-bd33-4a13-9b35-f9a444c570da'
-        ExperimentName: '$(EXPERIMENT_NAME)'
-        PipelineParameters: '"ParameterAssignments": {"model_name": "$(MODEL_NAME)"}, "tags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}, "StepTags": {"BuildId": "$(Build.BuildId)", "BuildUri": "$(BUILD_URI)"}'  
+      displayName: 'Get Pipeline ID & Trigger ML Training Pipeline'
 
   - job: "Publish_pipeline"
     dependsOn: "Run_ML_Pipeline"

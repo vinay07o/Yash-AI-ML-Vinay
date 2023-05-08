@@ -69,8 +69,10 @@ def main():
                 published_pipeline,
                 tags=tags,
                 pipeline_parameters=pipeline_parameters)
-
+            
             print("Pipeline run initiated ", run.id)
+
+            run.wait_for_completion(show_output=True)
 
 
 if __name__ == "__main__":
