@@ -30,7 +30,10 @@ def main():
 
     for p in pipelines:
         if p.name == e.pipeline_name:
-            matched_pipes.append(p)
+            if p.version == e.build_id:
+                matched_pipes.append(p)
+
+    print(len(matched_pipes))
 
     if(len(matched_pipes) > 1):
         published_pipeline = None
@@ -48,12 +51,16 @@ def main():
                 out_file.write(published_pipeline.id)
 
         pipeline_parameters = {"model_name": e.model_name}
+        tags = {"BuildId": e.build_id}
+        if (e.build_uri is not None):
+            tags["BuildUri"] = e.build_uri
  
         experiment = Experiment(
             workspace=aml_workspace,
             name=e.experiment_name)
         run = experiment.submit(
             published_pipeline,
+            tags=tags,
             pipeline_parameters=pipeline_parameters)
 
         print("Pipeline run initiated ", run.id)
