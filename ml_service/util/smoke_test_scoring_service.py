@@ -3,7 +3,7 @@ import requests
 import time
 from azureml.core import Workspace
 from azureml.core.webservice import AksWebservice, AciWebservice
-# from ml_service.util.env_variables import Env
+from ml_service.util.env_variables import Env
 import secrets
 
 
@@ -13,11 +13,11 @@ input = {"data": [[134, 29, 687698, 2000, 1413.14, 5000000, 430632, 35100, 0, 7,
 output_len = 1
 
 
-def call_web_service(service_type, service_name):
+def call_web_service(e, service_type, service_name):
     aml_workspace = Workspace.get(
-        name="AML-WorkSpace",
-        subscription_id="329034d6-eb63-442d-8652-e7e83d49a345",
-        resource_group='V1-ML-RG',
+        name=e.workspace_name,
+        subscription_id=e.subscription_id,
+        resource_group=e.resource_group
     )
     print("Fetching service")
     headers = {}
@@ -76,10 +76,11 @@ def main():
     )
     args = parser.parse_args()
 
+    e = Env()
     if args.type == "Webapp":
         output = call_web_app(args.service, {})
     else:
-        output = call_web_service(args.type, args.service)
+        output = call_web_service(e, args.type, args.service)
     print("Verifying service output")
 
     assert len(output) >= output_len
