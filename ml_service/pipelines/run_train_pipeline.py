@@ -1,4 +1,3 @@
-import os, json
 from azureml.pipeline.core import PublishedPipeline
 from azureml.core import Experiment, Workspace
 import argparse
