@@ -15,17 +15,7 @@ This guide shows how to get MLOpsPython working with a sample ML project **_Insu
 - [Set up Build, Release Trigger, and Release Multi-Stage Pipeline](#set-up-build-release-trigger-and-release-multi-stage-pipelines)
   - [Set up the Model CI Training, Evaluation, and Registration Pipeline](#set-up-the-model-ci-training-evaluation-and-registration-pipeline)
   - [Set up the Release Deployment and/or Batch Scoring Pipelines](#set-up-the-release-deployment-andor-batch-scoring-pipelines)
-- [Further Exploration](#further-exploration)
-  - [Deploy the model to Azure Kubernetes Service](#deploy-the-model-to-azure-kubernetes-service)
-    - [Web Service Authentication on Azure Kubernetes Service](#web-service-authentication-on-azure-kubernetes-service)
-  - [Deploy the model to Azure App Service (Azure Web App for containers)](#deploy-the-model-to-azure-app-service-azure-web-app-for-containers)
-  - [Example pipelines using R](#example-pipelines-using-r)
-  - [Observability and Monitoring](#observability-and-monitoring)
-  - [Clean up the example resources](#clean-up-the-example-resources)
-- [Next Steps: Integrating your project](#next-steps-integrating-your-project)
-  - [Additional Variables and Configuration](#additional-variables-and-configuration)
-    - [More variable options](#more-variable-options)
-    - [Local configuration](#local-configuration)
+
 
 ## Setting up Azure DevOps
 
