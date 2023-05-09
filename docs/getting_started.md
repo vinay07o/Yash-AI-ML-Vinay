@@ -14,7 +14,7 @@ This guide shows how to get MLOpsPython working with a sample ML project **_Insu
 - [Create an Azure DevOps Service Connection for the Azure ML Workspace](#create-an-azure-devops-service-connection-for-the-azure-ml-workspace)
 - [Set up Build, Release Trigger, and Release Multi-Stage Pipeline](#set-up-build-release-trigger-and-release-multi-stage-pipelines)
   - [Set up the Model CI Training, Evaluation, and Registration Pipeline](#set-up-the-model-ci-training-evaluation-and-registration-pipeline)
-  - [Set up the Release Deployment and/or Batch Scoring Pipelines](#set-up-the-release-deployment-andor-batch-scoring-pipelines)
+  - [Set up the Release Deployment](#set-up-the-release-deployment-andor-batch-scoring-pipelines)
 
 
 ## Setting up Azure DevOps
